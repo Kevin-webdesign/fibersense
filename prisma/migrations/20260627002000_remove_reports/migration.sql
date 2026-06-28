@@ -1,0 +1,3 @@
+ALTER TABLE "Report" DROP CONSTRAINT IF EXISTS "Report_generatedById_fkey";
+DROP TABLE IF EXISTS "Report";
+DROP TYPE IF EXISTS "ReportType";
