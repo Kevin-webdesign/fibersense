@@ -5,6 +5,7 @@ import {
   Brain,
   CheckCircle2,
   FileText,
+  MapPinned,
   Radio,
   Settings,
   ShieldCheck,
@@ -17,6 +18,10 @@ import { AdminUserManagement } from '@/components/dashboard/admin-user-managemen
 import { AiRequestLimitSettings } from '@/components/dashboard/ai-request-limit-settings'
 import { FaultLocationEditor } from '@/components/dashboard/fault-location-editor'
 import { LiveSignalMonitor } from '@/components/dashboard/live-signal-monitor'
+import {
+  NetworkSiteManager,
+  NetworkSiteSignalSimulation,
+} from '@/components/dashboard/network-site-manager'
 import { ReportGenerator } from '@/components/dashboard/report-generator'
 import { RiskAssessmentWorkspace } from '@/components/dashboard/risk-assessment-workspace'
 import { SupportTicketStatusEditor } from '@/components/dashboard/support-ticket-status-editor'
@@ -81,6 +86,10 @@ const SECTION_META: Record<string, { title: string; description: string }> = {
     title: 'Live Monitoring',
     description: 'Monitor signal strength, attenuation, and fault trends in real time.',
   },
+  'network-sites': {
+    title: 'Network Sites',
+    description: 'Add fiber network sites, distances, and location links for simulation.',
+  },
   'ai-analysis': {
     title: 'AI Analysis',
     description: 'Analyze fiber metrics with Groq-powered risk classification.',
@@ -102,8 +111,8 @@ const SECTION_META: Record<string, { title: string; description: string }> = {
     description: 'Manage customer outage reports and support escalations.',
   },
   tasks: {
-    title: 'Maintenance',
-    description: 'Track assigned field work and restoration tasks.',
+    title: 'Tasks & Escalations',
+    description: 'Assign repair work, track technician progress, and resolve linked escalations.',
   },
 }
 
@@ -144,7 +153,8 @@ function renderSection(section: string, role: RoleKey, data: DashboardData) {
   if (section === 'audit-logs') return <AuditLogsPage data={data} />
   if (section === 'settings') return <SettingsPage />
   if (section === 'live-monitoring') return <LiveMonitoringPage data={data} />
-  if (section === 'ai-analysis') return <AiAnalysisForm />
+  if (section === 'network-sites') return <NetworkSitesPage data={data} />
+  if (section === 'ai-analysis') return <AiAnalysisForm detections={data.networkDetections} />
   if (section === 'faults') return <FaultsPage data={data} role={role} />
   if (section === 'assessments') return <AssessmentsPage data={data} role={role} />
   if (section === 'alerts') return <AlertsPage data={data} role={role} />
@@ -221,8 +231,37 @@ function LiveMonitoringPage({ data }: { data: DashboardData }) {
         <SignalChart data={data.signalSeries} />
         <AttenuationChart data={data.signalSeries} />
       </div>
-      <LiveSignalMonitor />
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_420px]">
+        <LiveSignalMonitor sites={data.networkSites} />
+        <NetworkSiteSignalSimulation
+          sites={data.networkSites}
+          totalDistance={data.networkSites.reduce(
+            (total, site) =>
+              total + (site.distanceUnit === 'km' ? site.distance * 1000 : site.distance),
+            0
+          )}
+        />
+      </div>
       <FaultTrendChart data={data.faultTrend} />
+    </>
+  )
+}
+
+function NetworkSitesPage({ data }: { data: DashboardData }) {
+  const totalDistance = data.networkSites.reduce(
+    (total, site) => total + site.distance,
+    0
+  )
+
+  return (
+    <>
+      <StatGrid>
+        <StatCard label="Sites" value={data.networkSites.length.toString()} icon={MapPinned} />
+        <StatCard label="Total distance" value={`${totalDistance.toFixed(1)} m`} icon={Activity} />
+        <StatCard label="Segments" value={new Set(data.networkSites.map((site) => site.networkSegment).filter(Boolean)).size.toString()} icon={Radio} />
+        <StatCard label="Simulation" value="Active" icon={CheckCircle2} />
+      </StatGrid>
+      <NetworkSiteManager sites={data.networkSites} />
     </>
   )
 }
@@ -300,18 +339,35 @@ function TicketsPage({ data }: { data: DashboardData }) {
 }
 
 function TasksPage({ data, role }: { data: DashboardData; role: RoleKey }) {
+  const isOperations = role === 'operations'
+  const emergencyTickets = data.tickets.filter(
+    (row) => row.priority === 'Emergency'
+  ).length
+  const resolvedTasks = data.tasks.filter((row) => row.status === 'Resolved').length
+
   return (
     <>
       <StatGrid>
         <StatCard label="Open tasks" value={data.metrics.openTasks.toString()} icon={Wrench} />
         <StatCard label="In progress" value={data.metrics.inProgressTasks.toString()} icon={Activity} />
-        <StatCard label="Critical" value={data.tasks.filter((row) => row.priority === 'Critical').length.toString()} icon={AlertTriangle} />
+        {isOperations ? (
+          <>
+            <StatCard label="Open escalations" value={data.metrics.openTickets.toString()} icon={TicketCheck} />
+            <StatCard label="Emergency" value={emergencyTickets.toString()} icon={AlertTriangle} />
+          </>
+        ) : (
+          <>
+            <StatCard label="Resolved tasks" value={resolvedTasks.toString()} icon={CheckCircle2} />
+            <StatCard label="Critical" value={data.tasks.filter((row) => row.priority === 'Critical').length.toString()} icon={AlertTriangle} />
+          </>
+        )}
         <StatCard label="Workspace" value={ROLES[role].shortName} icon={ROLES[role].icon} />
       </StatGrid>
-      {role === 'operations' && (
+      {isOperations && (
         <TaskAssignmentForm faults={data.faults} users={data.users} />
       )}
       <TaskStatusEditor tasks={data.tasks} />
+      {isOperations && <SupportTicketStatusEditor tickets={data.tickets} />}
     </>
   )
 }

@@ -1,10 +1,11 @@
 "use client"
 
 import { useEffect, useMemo, useRef, useState } from "react"
-import { Activity, AlertTriangle, Radio, Signal } from "lucide-react"
+import { AlertTriangle, Radio, Signal } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { StatCard, StatGrid } from "@/components/dashboard/stat-card"
 import { RiskBadge } from "@/components/dashboard/status-badges"
+import type { NetworkSiteRow } from "@/lib/api-types"
 
 type SignalPoint = {
   time: string
@@ -18,7 +19,7 @@ type SignalPoint = {
   risk: "Low" | "Medium" | "High" | "Critical"
 }
 
-const segments = [
+const fallbackSegments = [
   "Kigali Core C-01",
   "Huye Ring S-04",
   "Rubavu Spur W-08",
@@ -37,31 +38,43 @@ function riskFrom(point: Pick<SignalPoint, "strength" | "attenuation" | "loss">)
   return "Low"
 }
 
-function makePoint(index: number): SignalPoint {
-  const segment = segments[index % segments.length]
-  const wave = Math.sin(Date.now() / 9000 + index)
+function makePoint(
+  index: number,
+  sites: NetworkSiteRow[],
+  now = 0,
+  time = "Starting"
+): SignalPoint {
+  const site = sites[index % Math.max(1, sites.length)]
+  const segment =
+    site?.networkSegment || site?.name || fallbackSegments[index % fallbackSegments.length]
+  const wave = Math.sin(now / 9000 + index)
   const strength = Number((-18 - index * 1.7 - Math.abs(wave * 5)).toFixed(2))
   const attenuation = Number((0.22 + index * 0.08 + Math.abs(wave * 0.18)).toFixed(2))
   const loss = Number((0.7 + index * 0.4 + Math.abs(wave * 1.1)).toFixed(2))
   const errorRate = Number((0.2 + index * 0.18 + Math.abs(wave * 0.55)).toFixed(2))
   const reflectionLevel = Number((0.1 + index * 0.06 + Math.abs(wave * 0.16)).toFixed(2))
   return {
-    time: new Date().toLocaleTimeString(),
+    time,
     segment,
     strength,
     attenuation,
     loss,
     errorRate,
     reflectionLevel,
-    distance: Number((4.8 + index * 10.6).toFixed(1)),
+    distance: site
+      ? Number((site.distanceUnit === "km" ? site.distance * 1000 : site.distance).toFixed(1))
+      : Number((4.8 + index * 10.6).toFixed(1)),
     risk: riskFrom({ strength, attenuation, loss }),
   }
 }
 
-export function LiveSignalMonitor() {
+export function LiveSignalMonitor({ sites = [] }: { sites?: NetworkSiteRow[] }) {
   const savingRef = useRef(false)
+  const activeCount = Math.max(1, Math.min(6, sites.length || fallbackSegments.length))
   const [points, setPoints] = useState<SignalPoint[]>(() =>
-    Array.from({ length: 4 }, (_, index) => makePoint(index))
+    Array.from({ length: activeCount }, (_, index) =>
+      makePoint(index, sites, 0, "Starting")
+    )
   )
 
   useEffect(() => {
@@ -91,14 +104,30 @@ export function LiveSignalMonitor() {
       }
     }
 
+    function generatePoints() {
+      const now = Date.now()
+      return Array.from({ length: activeCount }, (_, index) =>
+        makePoint(index, sites, now, new Date(now).toLocaleTimeString())
+      )
+    }
+
+    const firstTimer = window.setTimeout(() => {
+      const firstPoints = generatePoints()
+      setPoints(firstPoints)
+      void persistSignals(firstPoints)
+    }, 0)
+
     const timer = window.setInterval(() => {
-      const nextPoints = Array.from({ length: 4 }, (_, index) => makePoint(index))
+      const nextPoints = generatePoints()
       setPoints(nextPoints)
       void persistSignals(nextPoints)
     }, 3000)
 
-    return () => window.clearInterval(timer)
-  }, [])
+    return () => {
+      window.clearTimeout(firstTimer)
+      window.clearInterval(timer)
+    }
+  }, [activeCount, sites])
 
   const summary = useMemo(() => {
     const averageStrength =
@@ -118,12 +147,12 @@ export function LiveSignalMonitor() {
     <div className="space-y-6">
       <StatGrid>
         <StatCard label="Generated every" value="3 sec" icon={Signal} />
+        <StatCard label="Monitored sites" value={sites.length.toString()} icon={Radio} />
         <StatCard
           label="Average signal"
           value={`${summary.averageStrength.toFixed(1)} dBm`}
           icon={Radio}
         />
-        <StatCard label="Network health" value={`${summary.health}%`} icon={Activity} />
         <StatCard label="Risk segments" value={summary.critical.toString()} icon={AlertTriangle} />
       </StatGrid>
 
@@ -139,7 +168,9 @@ export function LiveSignalMonitor() {
             >
               <div>
                 <p className="font-medium text-foreground">{point.segment}</p>
-                <p className="text-xs text-muted-foreground">{point.time}</p>
+                <p className="text-xs text-muted-foreground">
+                  {point.time} | {point.distance} m route
+                </p>
               </div>
               <Metric label="Strength" value={`${point.strength} dBm`} />
               <Metric label="Attenuation" value={point.attenuation.toString()} />

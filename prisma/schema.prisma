@@ -192,6 +192,22 @@ model NetworkData {
   @@index([timestamp])
 }
 
+model NetworkSite {
+  id             String   @id @default(cuid())
+  name           String
+  location       String
+  connectedTo    String
+  distance       Float
+  distanceUnit   String   @default("m")
+  networkSegment String?
+  notes          String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([networkSegment])
+  @@index([createdAt])
+}
+
 model Fault {
   id              String      @id @default(cuid())
   faultType       FaultType

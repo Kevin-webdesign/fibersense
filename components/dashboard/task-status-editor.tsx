@@ -21,16 +21,18 @@ const statusOptions: Array<{ value: TaskStatus; label: string }> = [
   { value: "NEW", label: "New" },
   { value: "ASSIGNED", label: "Assigned" },
   { value: "IN_PROGRESS", label: "In Progress" },
-  { value: "COMPLETED", label: "Completed" },
+  { value: "COMPLETED", label: "Resolved" },
   { value: "CANCELLED", label: "Rejected" },
 ]
 
 function statusCode(label: string): TaskStatus {
+  if (label === "Resolved") return "COMPLETED"
   if (label === "Rejected") return "CANCELLED"
   return label.toUpperCase().replaceAll(" ", "_") as TaskStatus
 }
 
 function statusLabel(label: string) {
+  if (label === "Completed") return "Resolved"
   return label === "Cancelled" ? "Rejected" : label
 }
 
@@ -49,7 +51,7 @@ export function TaskStatusEditor({ tasks }: { tasks: TaskRow[] }) {
     startTransition(async () => {
       try {
         await updateTaskStatusAction({ id: task.id, status: status as TaskStatus })
-        toast.success(status === "COMPLETED" ? "Task completed and fault resolved" : "Task updated")
+        toast.success(status === "COMPLETED" ? "Task resolved with linked fault and escalation" : "Task updated")
       } catch (error) {
         toast.error(error instanceof Error ? error.message : "Task could not be updated")
       } finally {
@@ -75,7 +77,7 @@ export function TaskStatusEditor({ tasks }: { tasks: TaskRow[] }) {
           {tasks.map((task) => {
             const changed = statuses[task.id] !== statusCode(task.status)
             const pending = isPending && pendingTaskId === task.id
-            const locked = ['Completed', 'Cancelled', 'Rejected'].includes(task.status)
+            const locked = ['Resolved', 'Completed', 'Cancelled', 'Rejected'].includes(task.status)
 
             return (
               <TableRow key={task.id}>

@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import {
-  Bell,
   ChevronDown,
   LogOut,
   PanelLeftClose,
@@ -142,17 +141,6 @@ export function DashboardTopbar({
       </div>
 
       <div className="flex flex-1 items-center justify-end gap-2">
-        <Button
-          variant="outline"
-          size="icon"
-          className="relative"
-          aria-label="Notifications"
-          onClick={() => toast.info("3 unread alerts")}
-        >
-          <Bell className="size-4" />
-          <span className="absolute right-1.5 top-1.5 size-2 rounded-full bg-destructive" />
-        </Button>
-
         <div ref={accountMenuRef} className="relative">
           <button
             type="button"

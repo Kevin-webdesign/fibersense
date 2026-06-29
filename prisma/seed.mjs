@@ -161,6 +161,40 @@ async function main() {
     skipDuplicates: true,
   })
 
+  if ((await prisma.networkSite.count()) === 0) {
+    await prisma.networkSite.createMany({
+      data: [
+        {
+          name: 'Kigali Core C-01',
+          location: 'Kigali central exchange',
+          connectedTo: 'Huye Ring S-04',
+          distance: 200,
+          distanceUnit: 'm',
+          networkSegment: 'Kigali-Huye backbone',
+          notes: 'Core aggregation site.',
+        },
+        {
+          name: 'Huye Ring S-04',
+          location: 'Huye south ring cabinet',
+          connectedTo: 'Rubavu Spur W-08',
+          distance: 1.8,
+          distanceUnit: 'km',
+          networkSegment: 'Southern ring',
+          notes: 'Regional distribution cabinet.',
+        },
+        {
+          name: 'Kigali-Musanze NE-12',
+          location: 'North-east route marker 12',
+          connectedTo: 'Kigali Core C-01',
+          distance: 450,
+          distanceUnit: 'm',
+          networkSegment: 'Kigali-Musanze NE-12',
+          notes: 'Fault-prone long-haul segment.',
+        },
+      ],
+    })
+  }
+
   await prisma.maintenanceTask.create({
     data: {
       title: 'Verify splice repair on NE-12',

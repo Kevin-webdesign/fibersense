@@ -118,11 +118,35 @@ export interface DeviceRow {
   location: string
 }
 
+export interface NetworkSiteRow {
+  id: string
+  name: string
+  location: string
+  connectedTo: string
+  distance: number
+  distanceUnit: string
+  networkSegment?: string
+  notes?: string
+  createdAt: string
+}
+
 export interface SignalSample {
   time: string
   strength: number
   attenuation: number
   errorRate: number
+}
+
+export interface NetworkDetectionRow {
+  id: string
+  networkSegment: string
+  signalStrength: number
+  signalLoss: number
+  attenuation: number
+  errorRate: number
+  reflectionLevel: number
+  distance: number
+  detectedAt: string
 }
 
 export interface FaultTrendPoint {
@@ -168,6 +192,8 @@ export interface DashboardData {
   auditLogs: AuditLogRow[]
   tasks: TaskRow[]
   tickets: SupportTicketRow[]
+  networkSites: NetworkSiteRow[]
+  networkDetections: NetworkDetectionRow[]
   signalSeries: SignalSample[]
   faultTrend: FaultTrendPoint[]
   faultTypeBreakdown: FaultTypePoint[]

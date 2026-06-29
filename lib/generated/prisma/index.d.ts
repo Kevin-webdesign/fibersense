@@ -34,6 +34,11 @@ export type Dataset = $Result.DefaultSelection<Prisma.$DatasetPayload>
  */
 export type NetworkData = $Result.DefaultSelection<Prisma.$NetworkDataPayload>
 /**
+ * Model NetworkSite
+ * 
+ */
+export type NetworkSite = $Result.DefaultSelection<Prisma.$NetworkSitePayload>
+/**
  * Model Fault
  * 
  */
@@ -432,6 +437,16 @@ export class PrismaClient<
     * ```
     */
   get networkData(): Prisma.NetworkDataDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.networkSite`: Exposes CRUD operations for the **NetworkSite** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more NetworkSites
+    * const networkSites = await prisma.networkSite.findMany()
+    * ```
+    */
+  get networkSite(): Prisma.NetworkSiteDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.fault`: Exposes CRUD operations for the **Fault** model.
@@ -940,6 +955,7 @@ export namespace Prisma {
     PasswordResetOtp: 'PasswordResetOtp',
     Dataset: 'Dataset',
     NetworkData: 'NetworkData',
+    NetworkSite: 'NetworkSite',
     Fault: 'Fault',
     Prediction: 'Prediction',
     Alert: 'Alert',
@@ -962,7 +978,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "passwordResetOtp" | "dataset" | "networkData" | "fault" | "prediction" | "alert" | "signalGenerator" | "maintenanceTask" | "supportTicket" | "auditLog"
+      modelProps: "user" | "passwordResetOtp" | "dataset" | "networkData" | "networkSite" | "fault" | "prediction" | "alert" | "signalGenerator" | "maintenanceTask" | "supportTicket" | "auditLog"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1259,6 +1275,80 @@ export namespace Prisma {
           count: {
             args: Prisma.NetworkDataCountArgs<ExtArgs>
             result: $Utils.Optional<NetworkDataCountAggregateOutputType> | number
+          }
+        }
+      }
+      NetworkSite: {
+        payload: Prisma.$NetworkSitePayload<ExtArgs>
+        fields: Prisma.NetworkSiteFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.NetworkSiteFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NetworkSitePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.NetworkSiteFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NetworkSitePayload>
+          }
+          findFirst: {
+            args: Prisma.NetworkSiteFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NetworkSitePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.NetworkSiteFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NetworkSitePayload>
+          }
+          findMany: {
+            args: Prisma.NetworkSiteFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NetworkSitePayload>[]
+          }
+          create: {
+            args: Prisma.NetworkSiteCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NetworkSitePayload>
+          }
+          createMany: {
+            args: Prisma.NetworkSiteCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.NetworkSiteCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NetworkSitePayload>[]
+          }
+          delete: {
+            args: Prisma.NetworkSiteDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NetworkSitePayload>
+          }
+          update: {
+            args: Prisma.NetworkSiteUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NetworkSitePayload>
+          }
+          deleteMany: {
+            args: Prisma.NetworkSiteDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.NetworkSiteUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.NetworkSiteUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NetworkSitePayload>[]
+          }
+          upsert: {
+            args: Prisma.NetworkSiteUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NetworkSitePayload>
+          }
+          aggregate: {
+            args: Prisma.NetworkSiteAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateNetworkSite>
+          }
+          groupBy: {
+            args: Prisma.NetworkSiteGroupByArgs<ExtArgs>
+            result: $Utils.Optional<NetworkSiteGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.NetworkSiteCountArgs<ExtArgs>
+            result: $Utils.Optional<NetworkSiteCountAggregateOutputType> | number
           }
         }
       }
@@ -1892,6 +1982,7 @@ export namespace Prisma {
     passwordResetOtp?: PasswordResetOtpOmit
     dataset?: DatasetOmit
     networkData?: NetworkDataOmit
+    networkSite?: NetworkSiteOmit
     fault?: FaultOmit
     prediction?: PredictionOmit
     alert?: AlertOmit
@@ -6910,6 +7001,1105 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: NetworkDataInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model NetworkSite
+   */
+
+  export type AggregateNetworkSite = {
+    _count: NetworkSiteCountAggregateOutputType | null
+    _avg: NetworkSiteAvgAggregateOutputType | null
+    _sum: NetworkSiteSumAggregateOutputType | null
+    _min: NetworkSiteMinAggregateOutputType | null
+    _max: NetworkSiteMaxAggregateOutputType | null
+  }
+
+  export type NetworkSiteAvgAggregateOutputType = {
+    distance: number | null
+  }
+
+  export type NetworkSiteSumAggregateOutputType = {
+    distance: number | null
+  }
+
+  export type NetworkSiteMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    location: string | null
+    connectedTo: string | null
+    distance: number | null
+    distanceUnit: string | null
+    networkSegment: string | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type NetworkSiteMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    location: string | null
+    connectedTo: string | null
+    distance: number | null
+    distanceUnit: string | null
+    networkSegment: string | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type NetworkSiteCountAggregateOutputType = {
+    id: number
+    name: number
+    location: number
+    connectedTo: number
+    distance: number
+    distanceUnit: number
+    networkSegment: number
+    notes: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type NetworkSiteAvgAggregateInputType = {
+    distance?: true
+  }
+
+  export type NetworkSiteSumAggregateInputType = {
+    distance?: true
+  }
+
+  export type NetworkSiteMinAggregateInputType = {
+    id?: true
+    name?: true
+    location?: true
+    connectedTo?: true
+    distance?: true
+    distanceUnit?: true
+    networkSegment?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type NetworkSiteMaxAggregateInputType = {
+    id?: true
+    name?: true
+    location?: true
+    connectedTo?: true
+    distance?: true
+    distanceUnit?: true
+    networkSegment?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type NetworkSiteCountAggregateInputType = {
+    id?: true
+    name?: true
+    location?: true
+    connectedTo?: true
+    distance?: true
+    distanceUnit?: true
+    networkSegment?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type NetworkSiteAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which NetworkSite to aggregate.
+     */
+    where?: NetworkSiteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NetworkSites to fetch.
+     */
+    orderBy?: NetworkSiteOrderByWithRelationInput | NetworkSiteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: NetworkSiteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NetworkSites from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NetworkSites.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned NetworkSites
+    **/
+    _count?: true | NetworkSiteCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: NetworkSiteAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: NetworkSiteSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: NetworkSiteMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: NetworkSiteMaxAggregateInputType
+  }
+
+  export type GetNetworkSiteAggregateType<T extends NetworkSiteAggregateArgs> = {
+        [P in keyof T & keyof AggregateNetworkSite]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateNetworkSite[P]>
+      : GetScalarType<T[P], AggregateNetworkSite[P]>
+  }
+
+
+
+
+  export type NetworkSiteGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NetworkSiteWhereInput
+    orderBy?: NetworkSiteOrderByWithAggregationInput | NetworkSiteOrderByWithAggregationInput[]
+    by: NetworkSiteScalarFieldEnum[] | NetworkSiteScalarFieldEnum
+    having?: NetworkSiteScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: NetworkSiteCountAggregateInputType | true
+    _avg?: NetworkSiteAvgAggregateInputType
+    _sum?: NetworkSiteSumAggregateInputType
+    _min?: NetworkSiteMinAggregateInputType
+    _max?: NetworkSiteMaxAggregateInputType
+  }
+
+  export type NetworkSiteGroupByOutputType = {
+    id: string
+    name: string
+    location: string
+    connectedTo: string
+    distance: number
+    distanceUnit: string
+    networkSegment: string | null
+    notes: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: NetworkSiteCountAggregateOutputType | null
+    _avg: NetworkSiteAvgAggregateOutputType | null
+    _sum: NetworkSiteSumAggregateOutputType | null
+    _min: NetworkSiteMinAggregateOutputType | null
+    _max: NetworkSiteMaxAggregateOutputType | null
+  }
+
+  type GetNetworkSiteGroupByPayload<T extends NetworkSiteGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<NetworkSiteGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof NetworkSiteGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], NetworkSiteGroupByOutputType[P]>
+            : GetScalarType<T[P], NetworkSiteGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type NetworkSiteSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    location?: boolean
+    connectedTo?: boolean
+    distance?: boolean
+    distanceUnit?: boolean
+    networkSegment?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["networkSite"]>
+
+  export type NetworkSiteSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    location?: boolean
+    connectedTo?: boolean
+    distance?: boolean
+    distanceUnit?: boolean
+    networkSegment?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["networkSite"]>
+
+  export type NetworkSiteSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    location?: boolean
+    connectedTo?: boolean
+    distance?: boolean
+    distanceUnit?: boolean
+    networkSegment?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["networkSite"]>
+
+  export type NetworkSiteSelectScalar = {
+    id?: boolean
+    name?: boolean
+    location?: boolean
+    connectedTo?: boolean
+    distance?: boolean
+    distanceUnit?: boolean
+    networkSegment?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type NetworkSiteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "location" | "connectedTo" | "distance" | "distanceUnit" | "networkSegment" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["networkSite"]>
+
+  export type $NetworkSitePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "NetworkSite"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      location: string
+      connectedTo: string
+      distance: number
+      distanceUnit: string
+      networkSegment: string | null
+      notes: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["networkSite"]>
+    composites: {}
+  }
+
+  type NetworkSiteGetPayload<S extends boolean | null | undefined | NetworkSiteDefaultArgs> = $Result.GetResult<Prisma.$NetworkSitePayload, S>
+
+  type NetworkSiteCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<NetworkSiteFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: NetworkSiteCountAggregateInputType | true
+    }
+
+  export interface NetworkSiteDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['NetworkSite'], meta: { name: 'NetworkSite' } }
+    /**
+     * Find zero or one NetworkSite that matches the filter.
+     * @param {NetworkSiteFindUniqueArgs} args - Arguments to find a NetworkSite
+     * @example
+     * // Get one NetworkSite
+     * const networkSite = await prisma.networkSite.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends NetworkSiteFindUniqueArgs>(args: SelectSubset<T, NetworkSiteFindUniqueArgs<ExtArgs>>): Prisma__NetworkSiteClient<$Result.GetResult<Prisma.$NetworkSitePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one NetworkSite that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {NetworkSiteFindUniqueOrThrowArgs} args - Arguments to find a NetworkSite
+     * @example
+     * // Get one NetworkSite
+     * const networkSite = await prisma.networkSite.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends NetworkSiteFindUniqueOrThrowArgs>(args: SelectSubset<T, NetworkSiteFindUniqueOrThrowArgs<ExtArgs>>): Prisma__NetworkSiteClient<$Result.GetResult<Prisma.$NetworkSitePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first NetworkSite that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NetworkSiteFindFirstArgs} args - Arguments to find a NetworkSite
+     * @example
+     * // Get one NetworkSite
+     * const networkSite = await prisma.networkSite.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends NetworkSiteFindFirstArgs>(args?: SelectSubset<T, NetworkSiteFindFirstArgs<ExtArgs>>): Prisma__NetworkSiteClient<$Result.GetResult<Prisma.$NetworkSitePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first NetworkSite that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NetworkSiteFindFirstOrThrowArgs} args - Arguments to find a NetworkSite
+     * @example
+     * // Get one NetworkSite
+     * const networkSite = await prisma.networkSite.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends NetworkSiteFindFirstOrThrowArgs>(args?: SelectSubset<T, NetworkSiteFindFirstOrThrowArgs<ExtArgs>>): Prisma__NetworkSiteClient<$Result.GetResult<Prisma.$NetworkSitePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more NetworkSites that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NetworkSiteFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all NetworkSites
+     * const networkSites = await prisma.networkSite.findMany()
+     * 
+     * // Get first 10 NetworkSites
+     * const networkSites = await prisma.networkSite.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const networkSiteWithIdOnly = await prisma.networkSite.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends NetworkSiteFindManyArgs>(args?: SelectSubset<T, NetworkSiteFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NetworkSitePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a NetworkSite.
+     * @param {NetworkSiteCreateArgs} args - Arguments to create a NetworkSite.
+     * @example
+     * // Create one NetworkSite
+     * const NetworkSite = await prisma.networkSite.create({
+     *   data: {
+     *     // ... data to create a NetworkSite
+     *   }
+     * })
+     * 
+     */
+    create<T extends NetworkSiteCreateArgs>(args: SelectSubset<T, NetworkSiteCreateArgs<ExtArgs>>): Prisma__NetworkSiteClient<$Result.GetResult<Prisma.$NetworkSitePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many NetworkSites.
+     * @param {NetworkSiteCreateManyArgs} args - Arguments to create many NetworkSites.
+     * @example
+     * // Create many NetworkSites
+     * const networkSite = await prisma.networkSite.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends NetworkSiteCreateManyArgs>(args?: SelectSubset<T, NetworkSiteCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many NetworkSites and returns the data saved in the database.
+     * @param {NetworkSiteCreateManyAndReturnArgs} args - Arguments to create many NetworkSites.
+     * @example
+     * // Create many NetworkSites
+     * const networkSite = await prisma.networkSite.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many NetworkSites and only return the `id`
+     * const networkSiteWithIdOnly = await prisma.networkSite.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends NetworkSiteCreateManyAndReturnArgs>(args?: SelectSubset<T, NetworkSiteCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NetworkSitePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a NetworkSite.
+     * @param {NetworkSiteDeleteArgs} args - Arguments to delete one NetworkSite.
+     * @example
+     * // Delete one NetworkSite
+     * const NetworkSite = await prisma.networkSite.delete({
+     *   where: {
+     *     // ... filter to delete one NetworkSite
+     *   }
+     * })
+     * 
+     */
+    delete<T extends NetworkSiteDeleteArgs>(args: SelectSubset<T, NetworkSiteDeleteArgs<ExtArgs>>): Prisma__NetworkSiteClient<$Result.GetResult<Prisma.$NetworkSitePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one NetworkSite.
+     * @param {NetworkSiteUpdateArgs} args - Arguments to update one NetworkSite.
+     * @example
+     * // Update one NetworkSite
+     * const networkSite = await prisma.networkSite.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends NetworkSiteUpdateArgs>(args: SelectSubset<T, NetworkSiteUpdateArgs<ExtArgs>>): Prisma__NetworkSiteClient<$Result.GetResult<Prisma.$NetworkSitePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more NetworkSites.
+     * @param {NetworkSiteDeleteManyArgs} args - Arguments to filter NetworkSites to delete.
+     * @example
+     * // Delete a few NetworkSites
+     * const { count } = await prisma.networkSite.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends NetworkSiteDeleteManyArgs>(args?: SelectSubset<T, NetworkSiteDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more NetworkSites.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NetworkSiteUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many NetworkSites
+     * const networkSite = await prisma.networkSite.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends NetworkSiteUpdateManyArgs>(args: SelectSubset<T, NetworkSiteUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more NetworkSites and returns the data updated in the database.
+     * @param {NetworkSiteUpdateManyAndReturnArgs} args - Arguments to update many NetworkSites.
+     * @example
+     * // Update many NetworkSites
+     * const networkSite = await prisma.networkSite.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more NetworkSites and only return the `id`
+     * const networkSiteWithIdOnly = await prisma.networkSite.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends NetworkSiteUpdateManyAndReturnArgs>(args: SelectSubset<T, NetworkSiteUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NetworkSitePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one NetworkSite.
+     * @param {NetworkSiteUpsertArgs} args - Arguments to update or create a NetworkSite.
+     * @example
+     * // Update or create a NetworkSite
+     * const networkSite = await prisma.networkSite.upsert({
+     *   create: {
+     *     // ... data to create a NetworkSite
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the NetworkSite we want to update
+     *   }
+     * })
+     */
+    upsert<T extends NetworkSiteUpsertArgs>(args: SelectSubset<T, NetworkSiteUpsertArgs<ExtArgs>>): Prisma__NetworkSiteClient<$Result.GetResult<Prisma.$NetworkSitePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of NetworkSites.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NetworkSiteCountArgs} args - Arguments to filter NetworkSites to count.
+     * @example
+     * // Count the number of NetworkSites
+     * const count = await prisma.networkSite.count({
+     *   where: {
+     *     // ... the filter for the NetworkSites we want to count
+     *   }
+     * })
+    **/
+    count<T extends NetworkSiteCountArgs>(
+      args?: Subset<T, NetworkSiteCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], NetworkSiteCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a NetworkSite.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NetworkSiteAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends NetworkSiteAggregateArgs>(args: Subset<T, NetworkSiteAggregateArgs>): Prisma.PrismaPromise<GetNetworkSiteAggregateType<T>>
+
+    /**
+     * Group by NetworkSite.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NetworkSiteGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends NetworkSiteGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: NetworkSiteGroupByArgs['orderBy'] }
+        : { orderBy?: NetworkSiteGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, NetworkSiteGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetNetworkSiteGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the NetworkSite model
+   */
+  readonly fields: NetworkSiteFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for NetworkSite.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__NetworkSiteClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the NetworkSite model
+   */
+  interface NetworkSiteFieldRefs {
+    readonly id: FieldRef<"NetworkSite", 'String'>
+    readonly name: FieldRef<"NetworkSite", 'String'>
+    readonly location: FieldRef<"NetworkSite", 'String'>
+    readonly connectedTo: FieldRef<"NetworkSite", 'String'>
+    readonly distance: FieldRef<"NetworkSite", 'Float'>
+    readonly distanceUnit: FieldRef<"NetworkSite", 'String'>
+    readonly networkSegment: FieldRef<"NetworkSite", 'String'>
+    readonly notes: FieldRef<"NetworkSite", 'String'>
+    readonly createdAt: FieldRef<"NetworkSite", 'DateTime'>
+    readonly updatedAt: FieldRef<"NetworkSite", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * NetworkSite findUnique
+   */
+  export type NetworkSiteFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NetworkSite
+     */
+    select?: NetworkSiteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NetworkSite
+     */
+    omit?: NetworkSiteOmit<ExtArgs> | null
+    /**
+     * Filter, which NetworkSite to fetch.
+     */
+    where: NetworkSiteWhereUniqueInput
+  }
+
+  /**
+   * NetworkSite findUniqueOrThrow
+   */
+  export type NetworkSiteFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NetworkSite
+     */
+    select?: NetworkSiteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NetworkSite
+     */
+    omit?: NetworkSiteOmit<ExtArgs> | null
+    /**
+     * Filter, which NetworkSite to fetch.
+     */
+    where: NetworkSiteWhereUniqueInput
+  }
+
+  /**
+   * NetworkSite findFirst
+   */
+  export type NetworkSiteFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NetworkSite
+     */
+    select?: NetworkSiteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NetworkSite
+     */
+    omit?: NetworkSiteOmit<ExtArgs> | null
+    /**
+     * Filter, which NetworkSite to fetch.
+     */
+    where?: NetworkSiteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NetworkSites to fetch.
+     */
+    orderBy?: NetworkSiteOrderByWithRelationInput | NetworkSiteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for NetworkSites.
+     */
+    cursor?: NetworkSiteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NetworkSites from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NetworkSites.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of NetworkSites.
+     */
+    distinct?: NetworkSiteScalarFieldEnum | NetworkSiteScalarFieldEnum[]
+  }
+
+  /**
+   * NetworkSite findFirstOrThrow
+   */
+  export type NetworkSiteFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NetworkSite
+     */
+    select?: NetworkSiteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NetworkSite
+     */
+    omit?: NetworkSiteOmit<ExtArgs> | null
+    /**
+     * Filter, which NetworkSite to fetch.
+     */
+    where?: NetworkSiteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NetworkSites to fetch.
+     */
+    orderBy?: NetworkSiteOrderByWithRelationInput | NetworkSiteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for NetworkSites.
+     */
+    cursor?: NetworkSiteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NetworkSites from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NetworkSites.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of NetworkSites.
+     */
+    distinct?: NetworkSiteScalarFieldEnum | NetworkSiteScalarFieldEnum[]
+  }
+
+  /**
+   * NetworkSite findMany
+   */
+  export type NetworkSiteFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NetworkSite
+     */
+    select?: NetworkSiteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NetworkSite
+     */
+    omit?: NetworkSiteOmit<ExtArgs> | null
+    /**
+     * Filter, which NetworkSites to fetch.
+     */
+    where?: NetworkSiteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of NetworkSites to fetch.
+     */
+    orderBy?: NetworkSiteOrderByWithRelationInput | NetworkSiteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing NetworkSites.
+     */
+    cursor?: NetworkSiteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` NetworkSites from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` NetworkSites.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of NetworkSites.
+     */
+    distinct?: NetworkSiteScalarFieldEnum | NetworkSiteScalarFieldEnum[]
+  }
+
+  /**
+   * NetworkSite create
+   */
+  export type NetworkSiteCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NetworkSite
+     */
+    select?: NetworkSiteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NetworkSite
+     */
+    omit?: NetworkSiteOmit<ExtArgs> | null
+    /**
+     * The data needed to create a NetworkSite.
+     */
+    data: XOR<NetworkSiteCreateInput, NetworkSiteUncheckedCreateInput>
+  }
+
+  /**
+   * NetworkSite createMany
+   */
+  export type NetworkSiteCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many NetworkSites.
+     */
+    data: NetworkSiteCreateManyInput | NetworkSiteCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * NetworkSite createManyAndReturn
+   */
+  export type NetworkSiteCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NetworkSite
+     */
+    select?: NetworkSiteSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the NetworkSite
+     */
+    omit?: NetworkSiteOmit<ExtArgs> | null
+    /**
+     * The data used to create many NetworkSites.
+     */
+    data: NetworkSiteCreateManyInput | NetworkSiteCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * NetworkSite update
+   */
+  export type NetworkSiteUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NetworkSite
+     */
+    select?: NetworkSiteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NetworkSite
+     */
+    omit?: NetworkSiteOmit<ExtArgs> | null
+    /**
+     * The data needed to update a NetworkSite.
+     */
+    data: XOR<NetworkSiteUpdateInput, NetworkSiteUncheckedUpdateInput>
+    /**
+     * Choose, which NetworkSite to update.
+     */
+    where: NetworkSiteWhereUniqueInput
+  }
+
+  /**
+   * NetworkSite updateMany
+   */
+  export type NetworkSiteUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update NetworkSites.
+     */
+    data: XOR<NetworkSiteUpdateManyMutationInput, NetworkSiteUncheckedUpdateManyInput>
+    /**
+     * Filter which NetworkSites to update
+     */
+    where?: NetworkSiteWhereInput
+    /**
+     * Limit how many NetworkSites to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * NetworkSite updateManyAndReturn
+   */
+  export type NetworkSiteUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NetworkSite
+     */
+    select?: NetworkSiteSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the NetworkSite
+     */
+    omit?: NetworkSiteOmit<ExtArgs> | null
+    /**
+     * The data used to update NetworkSites.
+     */
+    data: XOR<NetworkSiteUpdateManyMutationInput, NetworkSiteUncheckedUpdateManyInput>
+    /**
+     * Filter which NetworkSites to update
+     */
+    where?: NetworkSiteWhereInput
+    /**
+     * Limit how many NetworkSites to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * NetworkSite upsert
+   */
+  export type NetworkSiteUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NetworkSite
+     */
+    select?: NetworkSiteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NetworkSite
+     */
+    omit?: NetworkSiteOmit<ExtArgs> | null
+    /**
+     * The filter to search for the NetworkSite to update in case it exists.
+     */
+    where: NetworkSiteWhereUniqueInput
+    /**
+     * In case the NetworkSite found by the `where` argument doesn't exist, create a new NetworkSite with this data.
+     */
+    create: XOR<NetworkSiteCreateInput, NetworkSiteUncheckedCreateInput>
+    /**
+     * In case the NetworkSite was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<NetworkSiteUpdateInput, NetworkSiteUncheckedUpdateInput>
+  }
+
+  /**
+   * NetworkSite delete
+   */
+  export type NetworkSiteDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NetworkSite
+     */
+    select?: NetworkSiteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NetworkSite
+     */
+    omit?: NetworkSiteOmit<ExtArgs> | null
+    /**
+     * Filter which NetworkSite to delete.
+     */
+    where: NetworkSiteWhereUniqueInput
+  }
+
+  /**
+   * NetworkSite deleteMany
+   */
+  export type NetworkSiteDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which NetworkSites to delete
+     */
+    where?: NetworkSiteWhereInput
+    /**
+     * Limit how many NetworkSites to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * NetworkSite without action
+   */
+  export type NetworkSiteDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NetworkSite
+     */
+    select?: NetworkSiteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the NetworkSite
+     */
+    omit?: NetworkSiteOmit<ExtArgs> | null
   }
 
 
@@ -15169,6 +16359,22 @@ export namespace Prisma {
   export type NetworkDataScalarFieldEnum = (typeof NetworkDataScalarFieldEnum)[keyof typeof NetworkDataScalarFieldEnum]
 
 
+  export const NetworkSiteScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    location: 'location',
+    connectedTo: 'connectedTo',
+    distance: 'distance',
+    distanceUnit: 'distanceUnit',
+    networkSegment: 'networkSegment',
+    notes: 'notes',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type NetworkSiteScalarFieldEnum = (typeof NetworkSiteScalarFieldEnum)[keyof typeof NetworkSiteScalarFieldEnum]
+
+
   export const FaultScalarFieldEnum: {
     id: 'id',
     faultType: 'faultType',
@@ -15864,6 +17070,85 @@ export namespace Prisma {
     networkSegment?: StringWithAggregatesFilter<"NetworkData"> | string
     timestamp?: DateTimeWithAggregatesFilter<"NetworkData"> | Date | string
     datasetId?: StringNullableWithAggregatesFilter<"NetworkData"> | string | null
+  }
+
+  export type NetworkSiteWhereInput = {
+    AND?: NetworkSiteWhereInput | NetworkSiteWhereInput[]
+    OR?: NetworkSiteWhereInput[]
+    NOT?: NetworkSiteWhereInput | NetworkSiteWhereInput[]
+    id?: StringFilter<"NetworkSite"> | string
+    name?: StringFilter<"NetworkSite"> | string
+    location?: StringFilter<"NetworkSite"> | string
+    connectedTo?: StringFilter<"NetworkSite"> | string
+    distance?: FloatFilter<"NetworkSite"> | number
+    distanceUnit?: StringFilter<"NetworkSite"> | string
+    networkSegment?: StringNullableFilter<"NetworkSite"> | string | null
+    notes?: StringNullableFilter<"NetworkSite"> | string | null
+    createdAt?: DateTimeFilter<"NetworkSite"> | Date | string
+    updatedAt?: DateTimeFilter<"NetworkSite"> | Date | string
+  }
+
+  export type NetworkSiteOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    location?: SortOrder
+    connectedTo?: SortOrder
+    distance?: SortOrder
+    distanceUnit?: SortOrder
+    networkSegment?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type NetworkSiteWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: NetworkSiteWhereInput | NetworkSiteWhereInput[]
+    OR?: NetworkSiteWhereInput[]
+    NOT?: NetworkSiteWhereInput | NetworkSiteWhereInput[]
+    name?: StringFilter<"NetworkSite"> | string
+    location?: StringFilter<"NetworkSite"> | string
+    connectedTo?: StringFilter<"NetworkSite"> | string
+    distance?: FloatFilter<"NetworkSite"> | number
+    distanceUnit?: StringFilter<"NetworkSite"> | string
+    networkSegment?: StringNullableFilter<"NetworkSite"> | string | null
+    notes?: StringNullableFilter<"NetworkSite"> | string | null
+    createdAt?: DateTimeFilter<"NetworkSite"> | Date | string
+    updatedAt?: DateTimeFilter<"NetworkSite"> | Date | string
+  }, "id">
+
+  export type NetworkSiteOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    location?: SortOrder
+    connectedTo?: SortOrder
+    distance?: SortOrder
+    distanceUnit?: SortOrder
+    networkSegment?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: NetworkSiteCountOrderByAggregateInput
+    _avg?: NetworkSiteAvgOrderByAggregateInput
+    _max?: NetworkSiteMaxOrderByAggregateInput
+    _min?: NetworkSiteMinOrderByAggregateInput
+    _sum?: NetworkSiteSumOrderByAggregateInput
+  }
+
+  export type NetworkSiteScalarWhereWithAggregatesInput = {
+    AND?: NetworkSiteScalarWhereWithAggregatesInput | NetworkSiteScalarWhereWithAggregatesInput[]
+    OR?: NetworkSiteScalarWhereWithAggregatesInput[]
+    NOT?: NetworkSiteScalarWhereWithAggregatesInput | NetworkSiteScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"NetworkSite"> | string
+    name?: StringWithAggregatesFilter<"NetworkSite"> | string
+    location?: StringWithAggregatesFilter<"NetworkSite"> | string
+    connectedTo?: StringWithAggregatesFilter<"NetworkSite"> | string
+    distance?: FloatWithAggregatesFilter<"NetworkSite"> | number
+    distanceUnit?: StringWithAggregatesFilter<"NetworkSite"> | string
+    networkSegment?: StringNullableWithAggregatesFilter<"NetworkSite"> | string | null
+    notes?: StringNullableWithAggregatesFilter<"NetworkSite"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"NetworkSite"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"NetworkSite"> | Date | string
   }
 
   export type FaultWhereInput = {
@@ -16764,6 +18049,97 @@ export namespace Prisma {
     networkSegment?: StringFieldUpdateOperationsInput | string
     timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
     datasetId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type NetworkSiteCreateInput = {
+    id?: string
+    name: string
+    location: string
+    connectedTo: string
+    distance: number
+    distanceUnit?: string
+    networkSegment?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type NetworkSiteUncheckedCreateInput = {
+    id?: string
+    name: string
+    location: string
+    connectedTo: string
+    distance: number
+    distanceUnit?: string
+    networkSegment?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type NetworkSiteUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    connectedTo?: StringFieldUpdateOperationsInput | string
+    distance?: FloatFieldUpdateOperationsInput | number
+    distanceUnit?: StringFieldUpdateOperationsInput | string
+    networkSegment?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NetworkSiteUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    connectedTo?: StringFieldUpdateOperationsInput | string
+    distance?: FloatFieldUpdateOperationsInput | number
+    distanceUnit?: StringFieldUpdateOperationsInput | string
+    networkSegment?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NetworkSiteCreateManyInput = {
+    id?: string
+    name: string
+    location: string
+    connectedTo: string
+    distance: number
+    distanceUnit?: string
+    networkSegment?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type NetworkSiteUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    connectedTo?: StringFieldUpdateOperationsInput | string
+    distance?: FloatFieldUpdateOperationsInput | number
+    distanceUnit?: StringFieldUpdateOperationsInput | string
+    networkSegment?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NetworkSiteUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    location?: StringFieldUpdateOperationsInput | string
+    connectedTo?: StringFieldUpdateOperationsInput | string
+    distance?: FloatFieldUpdateOperationsInput | number
+    distanceUnit?: StringFieldUpdateOperationsInput | string
+    networkSegment?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type FaultCreateInput = {
@@ -17821,6 +19197,53 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type NetworkSiteCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    location?: SortOrder
+    connectedTo?: SortOrder
+    distance?: SortOrder
+    distanceUnit?: SortOrder
+    networkSegment?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type NetworkSiteAvgOrderByAggregateInput = {
+    distance?: SortOrder
+  }
+
+  export type NetworkSiteMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    location?: SortOrder
+    connectedTo?: SortOrder
+    distance?: SortOrder
+    distanceUnit?: SortOrder
+    networkSegment?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type NetworkSiteMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    location?: SortOrder
+    connectedTo?: SortOrder
+    distance?: SortOrder
+    distanceUnit?: SortOrder
+    networkSegment?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type NetworkSiteSumOrderByAggregateInput = {
+    distance?: SortOrder
   }
 
   export type EnumFaultTypeFilter<$PrismaModel = never> = {

@@ -47,7 +47,7 @@ export function EngineerDashboard({ data }: { data: DashboardData }) {
         />
       </StatGrid>
 
-      <LiveSignalMonitor />
+      <LiveSignalMonitor sites={data.networkSites} />
 
       <div className="grid gap-6 lg:grid-cols-2">
         <SignalChart data={data.signalSeries} />

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Brain, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { RiskBadge } from '@/components/dashboard/status-badges'
+import type { NetworkDetectionRow } from '@/lib/api-types'
 
 type AnalysisResult = {
   riskLevel: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL'
@@ -17,27 +18,73 @@ type AnalysisResult = {
   explanation: string
 }
 
-export function AiAnalysisForm() {
+type AnalysisFormState = {
+  networkSegment: string
+  signalStrength: string
+  signalLoss: string
+  attenuation: string
+  errorRate: string
+  reflectionLevel: string
+  distance: string
+}
+
+const defaultForm: AnalysisFormState = {
+  networkSegment: 'Huye Ring S-04',
+  signalStrength: '-22.1',
+  signalLoss: '2.7',
+  attenuation: '0.48',
+  errorRate: '1.8',
+  reflectionLevel: '0.31',
+  distance: '18.2',
+}
+
+export function AiAnalysisForm({
+  detections = [],
+}: {
+  detections?: NetworkDetectionRow[]
+}) {
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<AnalysisResult | null>(null)
+  const [selectedDetectionId, setSelectedDetectionId] = useState('')
+  const [formValues, setFormValues] = useState<AnalysisFormState>(defaultForm)
+  const latestDetections = useMemo(() => detections.slice(0, 20), [detections])
+
+  function updateField(name: keyof AnalysisFormState, value: string) {
+    setFormValues((current) => ({ ...current, [name]: value }))
+  }
+
+  function selectDetection(id: string) {
+    setSelectedDetectionId(id)
+    const detection = detections.find((item) => item.id === id)
+    if (!detection) return
+
+    setFormValues({
+      networkSegment: detection.networkSegment,
+      signalStrength: detection.signalStrength.toString(),
+      signalLoss: detection.signalLoss.toString(),
+      attenuation: detection.attenuation.toString(),
+      errorRate: detection.errorRate.toString(),
+      reflectionLevel: detection.reflectionLevel.toString(),
+      distance: detection.distance.toString(),
+    })
+  }
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setLoading(true)
-    const form = new FormData(event.currentTarget)
 
     try {
       const response = await fetch('/api/ai/analyze', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
-          networkSegment: form.get('networkSegment'),
-          signalStrength: Number(form.get('signalStrength')),
-          signalLoss: Number(form.get('signalLoss')),
-          attenuation: Number(form.get('attenuation')),
-          errorRate: Number(form.get('errorRate')),
-          reflectionLevel: Number(form.get('reflectionLevel')),
-          distance: Number(form.get('distance')),
+          networkSegment: formValues.networkSegment,
+          signalStrength: Number(formValues.signalStrength),
+          signalLoss: Number(formValues.signalLoss),
+          attenuation: Number(formValues.attenuation),
+          errorRate: Number(formValues.errorRate),
+          reflectionLevel: Number(formValues.reflectionLevel),
+          distance: Number(formValues.distance),
         }),
       })
       const payload = await response.json()
@@ -65,20 +112,67 @@ export function AiAnalysisForm() {
         <CardContent>
           <form onSubmit={onSubmit} className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2 sm:col-span-2">
+              <Label htmlFor="existingDetection">Existing detection</Label>
+              <select
+                id="existingDetection"
+                value={selectedDetectionId}
+                onChange={(event) => selectDetection(event.target.value)}
+                className="h-8 w-full rounded-lg border border-input bg-background px-2 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+              >
+                <option value="">Manual analysis</option>
+                {latestDetections.map((detection) => (
+                  <option key={detection.id} value={detection.id}>
+                    {detection.networkSegment} | {detection.detectedAt} | {detection.signalStrength} dBm
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="space-y-2 sm:col-span-2">
               <Label htmlFor="networkSegment">Network segment</Label>
               <Input
                 id="networkSegment"
                 name="networkSegment"
-                defaultValue="Huye Ring S-04"
+                value={formValues.networkSegment}
+                onChange={(event) => updateField('networkSegment', event.target.value)}
                 required
               />
             </div>
-            <MetricInput name="signalStrength" label="Signal strength" value="-22.1" />
-            <MetricInput name="signalLoss" label="Signal loss" value="2.7" />
-            <MetricInput name="attenuation" label="Attenuation" value="0.48" />
-            <MetricInput name="errorRate" label="Error rate" value="1.8" />
-            <MetricInput name="reflectionLevel" label="Reflection level" value="0.31" />
-            <MetricInput name="distance" label="Distance km" value="18.2" />
+            <MetricInput
+              name="signalStrength"
+              label="Signal strength"
+              value={formValues.signalStrength}
+              onChange={(value) => updateField('signalStrength', value)}
+            />
+            <MetricInput
+              name="signalLoss"
+              label="Signal loss"
+              value={formValues.signalLoss}
+              onChange={(value) => updateField('signalLoss', value)}
+            />
+            <MetricInput
+              name="attenuation"
+              label="Attenuation"
+              value={formValues.attenuation}
+              onChange={(value) => updateField('attenuation', value)}
+            />
+            <MetricInput
+              name="errorRate"
+              label="Error rate"
+              value={formValues.errorRate}
+              onChange={(value) => updateField('errorRate', value)}
+            />
+            <MetricInput
+              name="reflectionLevel"
+              label="Reflection level"
+              value={formValues.reflectionLevel}
+              onChange={(value) => updateField('reflectionLevel', value)}
+            />
+            <MetricInput
+              name="distance"
+              label="Distance m"
+              value={formValues.distance}
+              onChange={(value) => updateField('distance', value)}
+            />
             <div className="sm:col-span-2">
               <Button type="submit" disabled={loading}>
                 {loading && <Loader2 className="size-4 animate-spin" />}
@@ -135,15 +229,24 @@ function MetricInput({
   name,
   label,
   value,
+  onChange,
 }: {
   name: string
   label: string
   value: string
+  onChange: (value: string) => void
 }) {
   return (
     <div className="space-y-2">
       <Label htmlFor={name}>{label}</Label>
-      <Input id={name} name={name} type="number" step="0.01" defaultValue={value} />
+      <Input
+        id={name}
+        name={name}
+        type="number"
+        step="0.01"
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+      />
     </div>
   )
 }

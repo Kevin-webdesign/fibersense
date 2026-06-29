@@ -27,6 +27,8 @@ import type {
   FaultTrendPoint,
   FaultTypePoint,
   FaultRow,
+  NetworkSiteRow,
+  NetworkDetectionRow,
   PredictionRow,
   SignalSample,
   SupportTicketRow,
@@ -209,6 +211,22 @@ function toDeviceRow(
   }
 }
 
+function toNetworkSiteRow(
+  site: Awaited<ReturnType<typeof listNetworkSitesFromDb>>[number]
+): NetworkSiteRow {
+  return {
+    id: site.id,
+    name: site.name,
+    location: site.location,
+    connectedTo: site.connectedTo,
+    distance: site.distance,
+    distanceUnit: site.distanceUnit,
+    networkSegment: site.networkSegment ?? undefined,
+    notes: site.notes ?? undefined,
+    createdAt: formatRelative(site.createdAt),
+  }
+}
+
 export async function listFaultsFromDb() {
   noStore()
   return prisma.fault.findMany({
@@ -263,6 +281,15 @@ export async function listDeviceRows(): Promise<DeviceRow[]> {
   return (await listDevices()).map(toDeviceRow)
 }
 
+export async function listNetworkSitesFromDb() {
+  noStore()
+  return prisma.networkSite.findMany({ orderBy: { createdAt: 'desc' } })
+}
+
+export async function listNetworkSiteRows(): Promise<NetworkSiteRow[]> {
+  return (await listNetworkSitesFromDb()).map(toNetworkSiteRow)
+}
+
 export async function listDatasets(): Promise<DatasetRow[]> {
   noStore()
   const rows = await prisma.dataset.findMany({
@@ -292,6 +319,26 @@ export async function listNetworkData(): Promise<SignalSample[]> {
     strength: row.signalStrength,
     attenuation: row.attenuation,
     errorRate: row.errorRate,
+  }))
+}
+
+export async function listNetworkDetections(): Promise<NetworkDetectionRow[]> {
+  noStore()
+  const rows = await prisma.networkData.findMany({
+    orderBy: { timestamp: 'desc' },
+    take: 50,
+  })
+
+  return rows.map((row) => ({
+    id: row.id,
+    networkSegment: row.networkSegment,
+    signalStrength: row.signalStrength,
+    signalLoss: row.signalLoss,
+    attenuation: row.attenuation,
+    errorRate: row.errorRate,
+    reflectionLevel: row.reflectionLevel,
+    distance: row.distance,
+    detectedAt: formatRelative(row.timestamp),
   }))
 }
 
@@ -362,7 +409,10 @@ export async function listTasks(): Promise<TaskRow[]> {
       (task.fault ? locationFromSegment(task.fault.networkSegment) : undefined),
     priority: titleCaseEnum(task.priority),
     due: task.dueAt ? task.dueAt.toLocaleString() : 'Unscheduled',
-    status: titleCaseEnum(task.status).replace('In Progress', 'In Progress'),
+    status:
+      task.status === 'COMPLETED'
+        ? 'Resolved'
+        : titleCaseEnum(task.status).replace('In Progress', 'In Progress'),
   }))
 }
 
@@ -469,6 +519,8 @@ export async function getDashboardData(role: RoleKey): Promise<DashboardData> {
     auditLogs,
     tasks,
     tickets,
+    networkSites,
+    networkDetections,
     signalSeries,
     faultTrend,
     faultTypeBreakdown,
@@ -483,6 +535,8 @@ export async function getDashboardData(role: RoleKey): Promise<DashboardData> {
     listAuditLogs(),
     listTasks(),
     listSupportTickets(),
+    listNetworkSiteRows(),
+    listNetworkDetections(),
     listNetworkData(),
     listFaultTrend(),
     listFaultTypes(),
@@ -500,6 +554,8 @@ export async function getDashboardData(role: RoleKey): Promise<DashboardData> {
     auditLogs,
     tasks,
     tickets,
+    networkSites,
+    networkDetections,
     signalSeries,
     faultTrend,
     faultTypeBreakdown,
@@ -623,6 +679,28 @@ export async function createNetworkData(input: {
   datasetId?: string
 }) {
   return prisma.networkData.create({ data: input })
+}
+
+export async function createNetworkSite(input: {
+  name: string
+  location: string
+  connectedTo: string
+  distance: number
+  distanceUnit?: string
+  networkSegment?: string
+  notes?: string
+}) {
+  return prisma.networkSite.create({
+    data: {
+      name: input.name.trim(),
+      location: input.location.trim(),
+      connectedTo: input.connectedTo.trim(),
+      distance: input.distance,
+      distanceUnit: input.distanceUnit?.trim() || 'm',
+      networkSegment: input.networkSegment?.trim() || null,
+      notes: input.notes?.trim() || null,
+    },
+  })
 }
 
 export async function processGeneratedSignal(input: {

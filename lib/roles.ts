@@ -8,6 +8,7 @@ import {
   FileText,
   LayoutDashboard,
   ListChecks,
+  MapPinned,
   Radio,
   ScrollText,
   Settings,
@@ -78,6 +79,7 @@ export const ROLE_NAV: Record<RoleKey, NavItem[]> = {
   engineer: [
     { label: 'Overview', icon: LayoutDashboard, href: '/dashboard' },
     { label: 'Network Performance', icon: Activity, href: '/dashboard/live-monitoring' },
+    { label: 'Network Sites', icon: MapPinned, href: '/dashboard/network-sites' },
     { label: 'Detected Faults', icon: AlertTriangle, href: '/dashboard/faults' },
     { label: 'Assessments', icon: TrendingUp, href: '/dashboard/assessments' },
     { label: 'AI Analysis', icon: Brain, href: '/dashboard/ai-analysis' },
@@ -89,8 +91,7 @@ export const ROLE_NAV: Record<RoleKey, NavItem[]> = {
     { label: 'Alerts', icon: AlertTriangle, href: '/dashboard/alerts' },
     { label: 'Network Status', icon: Activity, href: '/dashboard/live-monitoring' },
     { label: 'Critical Faults', icon: ListChecks, href: '/dashboard/faults' },
-    { label: 'Assign Tasks', icon: Wrench, href: '/dashboard/tasks' },
-    { label: 'Escalations', icon: TicketCheck, href: '/dashboard/tickets' },
+    { label: 'Tasks & Escalations', icon: TicketCheck, href: '/dashboard/tasks' },
     { label: 'Reports', icon: BarChart3, href: '/dashboard/reports' },
   ],
   support: [
